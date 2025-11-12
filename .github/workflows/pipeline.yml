@@ -25,6 +25,12 @@ jobs:
         run: npm run lint:full
       - name: build
         run: npm run build:ui
+      - name: Create .env file
+        run: |
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "TEST_MONGODB_URI=${{ secrets.TEST_MONGODB_URI }}" >> .env
+          echo "SECRET=${{ secrets.SECRET }}" >> .env
       - name: test
         run: npm run test:full
       - name: Run Playwright tests
