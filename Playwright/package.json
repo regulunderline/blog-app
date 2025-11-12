@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "cd ../ && run start:test",
     "test": "playwright test",
     "test:report": "playwright show-report"
   },
