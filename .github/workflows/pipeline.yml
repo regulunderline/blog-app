@@ -1,85 +1,85 @@
-# name: Deployment pipeline
+name: Deployment pipeline
 
-# env:
-#   SKIP: ${{ contains(toJson(join(github.event.commits.*.message)), '#skip') }}
+env:
+  SKIP: ${{ contains(toJson(join(github.event.commits.*.message)), '#skip') }}
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches: [main]
-#     types: [opened, synchronize]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
-# jobs:
-#   simple_deployment_pipeline:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: actions/setup-node@v4
-#         with:
-#           node-version: '22'
-#       - name: Install dependencies 
-#         run: npm run install:full
-#       - name: lint
-#         run: npm run lint:full
-#       - name: build
-#         run: npm run build:ui
-#       - name: test
-#         run: npm run test:full
-#       - name: Run Playwright tests
-#         run: npm run test:e2e
-#       - uses: actions/upload-artifact@v4
-#         if: ${{ !cancelled() }}
-#         with:
-#           name: playwright-report
-#           path: playwright-report/
-#           retention-days: 30
-#       - name: Trigger deployment
-#         if: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
-#         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-#   tag_release:
-#     needs: [simple_deployment_pipeline]
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Bump version and push tag
-#         if: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
-#         uses: anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           DEFAULT_BUMP: patch
-#   notification_Success:
-#     if: ${{ success() && github.event_name == 'push' }}
-#     needs: [simple_deployment_pipeline]
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Success
-#         uses: sarisia/actions-status-discord@v1
-#         with:
-#           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-#           nocontext: 'true'
-#           content: 'A new version of Pokedox deployed'
-#           description: 'to https://full-stack-open-pokedex-7hwu.onrender.com/ by ${{ github.event.commits[0].author.name }}'
-#   notification_Failure:
-#     if: ${{ !success() && github.event_name == 'push' }}
-#     needs: [simple_deployment_pipeline]
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Get commit URL
-#         run: |
-#           COMMIT_SHA="${{ github.sha }}"
-#           REPO_OWNER="${{ github.repository_owner }}"
-#           REPO_NAME="${{ github.event.repository.name }}"
-#           COMMIT_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/commit/${COMMIT_SHA}"
-#           echo "Commit URL: ${COMMIT_URL}"
-#           echo "COMMIT_URL=${COMMIT_URL}" >> "$GITHUB_ENV"
-#       - name: Failure
-#         uses: sarisia/actions-status-discord@v1
-#         with:
-#           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-#           status: Failure 
-#           nocontext: 'true'
-#           content: Build failed
-#           description: 'commit ${{ env.COMMIT_URL }} by ${{ github.event.commits[0].author.name }} broke the build'
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies 
+        run: npm run install:full
+      - name: lint
+        run: npm run lint:full
+      - name: build
+        run: npm run build:ui
+      - name: test
+        run: npm run test:full
+      - name: Run Playwright tests
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+      - name: Trigger deployment
+        if: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
+        uses: anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+  # notification_Success:
+  #   if: ${{ success() && github.event_name == 'push' }}
+  #   needs: [simple_deployment_pipeline]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Success
+  #       uses: sarisia/actions-status-discord@v1
+  #       with:
+  #         webhook: ${{ secrets.DISCORD_WEBHOOK }}
+  #         nocontext: 'true'
+  #         content: 'A new version of Pokedox deployed'
+  #         description: 'to https://full-stack-open-pokedex-7hwu.onrender.com/ by ${{ github.event.commits[0].author.name }}'
+  # notification_Failure:
+  #   if: ${{ !success() && github.event_name == 'push' }}
+  #   needs: [simple_deployment_pipeline]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get commit URL
+  #       run: |
+  #         COMMIT_SHA="${{ github.sha }}"
+  #         REPO_OWNER="${{ github.repository_owner }}"
+  #         REPO_NAME="${{ github.event.repository.name }}"
+  #         COMMIT_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/commit/${COMMIT_SHA}"
+  #         echo "Commit URL: ${COMMIT_URL}"
+  #         echo "COMMIT_URL=${COMMIT_URL}" >> "$GITHUB_ENV"
+  #     - name: Failure
+  #       uses: sarisia/actions-status-discord@v1
+  #       with:
+  #         webhook: ${{ secrets.DISCORD_WEBHOOK }}
+  #         status: Failure 
+  #         nocontext: 'true'
+  #         content: Build failed
+  #         description: 'commit ${{ env.COMMIT_URL }} by ${{ github.event.commits[0].author.name }} broke the build'
