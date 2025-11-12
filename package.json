@@ -7,11 +7,13 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "install:full": "npm i && cd ./frontend && npm i && cd ../Playwright && npm i",
     "start": "cross-env NODE_ENV=production node index.js",
     "start:build": "npm run build:ui && npm start",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
     "test": "cross-env  NODE_ENV=test node --test",
     "test:full": "npm run test && cd frontend && npm run test",
+    "test:e2e": "cd ./Playwright && npx playwright install --with-deps && npm run test",
     "lint": "eslint .",
     "lint:full": "npm run lint && cd ./frontend && npm run lint",
     "build:ui": "rm -rf dist && cd ./frontend && npm run build && cp -r dist ../",
