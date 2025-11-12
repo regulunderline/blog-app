@@ -55,37 +55,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-  # notification_Success:
-  #   if: ${{ success() && github.event_name == 'push' }}
-  #   needs: [simple_deployment_pipeline]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Success
-  #       uses: sarisia/actions-status-discord@v1
-  #       with:
-  #         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-  #         nocontext: 'true'
-  #         content: 'A new version of Pokedox deployed'
-  #         description: 'to https://full-stack-open-pokedex-7hwu.onrender.com/ by ${{ github.event.commits[0].author.name }}'
-  # notification_Failure:
-  #   if: ${{ !success() && github.event_name == 'push' }}
-  #   needs: [simple_deployment_pipeline]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get commit URL
-  #       run: |
-  #         COMMIT_SHA="${{ github.sha }}"
-  #         REPO_OWNER="${{ github.repository_owner }}"
-  #         REPO_NAME="${{ github.event.repository.name }}"
-  #         COMMIT_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/commit/${COMMIT_SHA}"
-  #         echo "Commit URL: ${COMMIT_URL}"
-  #         echo "COMMIT_URL=${COMMIT_URL}" >> "$GITHUB_ENV"
-  #     - name: Failure
-  #       uses: sarisia/actions-status-discord@v1
-  #       with:
-  #         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-  #         status: Failure 
-  #         nocontext: 'true'
-  #         content: Build failed
-  #         description: 'commit ${{ env.COMMIT_URL }} by ${{ github.event.commits[0].author.name }} broke the build'
+  notification_Success:
+    if: ${{ success() && github.event_name == 'push' }}
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Success
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nocontext: 'true'
+          content: 'A new version of Pokedox deployed'
+          description: 'to https://full-stack-open-pokedex-7hwu.onrender.com/ by ${{ github.event.commits[0].author.name }}'
+  notification_Failure:
+    if: ${{ !success() && github.event_name == 'push' }}
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get commit URL
+        run: |
+          COMMIT_SHA="${{ github.sha }}"
+          REPO_OWNER="${{ github.repository_owner }}"
+          REPO_NAME="${{ github.event.repository.name }}"
+          COMMIT_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/commit/${COMMIT_SHA}"
+          echo "Commit URL: ${COMMIT_URL}"
+          echo "COMMIT_URL=${COMMIT_URL}" >> "$GITHUB_ENV"
+      - name: Failure
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: Failure 
+          nocontext: 'true'
+          content: Build failed
+          description: 'commit ${{ env.COMMIT_URL }} by ${{ github.event.commits[0].author.name }} broke the build'
