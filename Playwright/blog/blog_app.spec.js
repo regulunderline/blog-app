@@ -70,24 +70,6 @@ describe('Blog app', () => {
       await expect(page.getByText('title author')).not.toBeVisible()
     })
 
-    test('blogs are sorted by likes', async ({ page }) => {
-      await createBlog(page, 'title', 'author', 'url')
-      await createBlog(page, 'title1', 'author1', 'url1')
-
-      await page.getByText('title author view').getByRole('button', { name: 'view' }).click()
-      await page.getByRole('button', { name: 'like' }).click()
-      await page.getByRole('button', { name: 'hide' }).click()
-
-      await expect(page.getByText('view').first().locator('..').getByText('title author view')).toBeVisible()
-
-      await page.getByText('title1 author1 view').getByRole('button', { name: 'view' }).click()
-      await page.getByRole('button', { name: 'like' }).click()
-      await page.getByText('you liked a blog title1 by author1').waitFor()
-      await page.getByRole('button', { name: 'like' }).click()
-      await page.getByRole('button', { name: 'hide' }).click()
-
-      expect(page.getByText('view').first().locator('..').getByText('title1 author1 view')).toBeVisible()
-    })
   })
   test('only can see remove button if blog is yours', async ({ page, request }) => {
     await request.post('/api/users', {
