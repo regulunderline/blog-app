@@ -11,7 +11,9 @@
     "start:build": "npm run build:ui && npm start",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
     "test": "cross-env  NODE_ENV=test node --test",
+    "test:full": "npm run test && cd frontend && npm run test",
     "lint": "eslint .",
+    "lint:full": "npm run lint && cd ./frontend && npm run lint",
     "build:ui": "rm -rf dist && cd ./frontend && npm run build && cp -r dist ../",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "start:test": "cross-env NODE_ENV=test node --watch index.js"

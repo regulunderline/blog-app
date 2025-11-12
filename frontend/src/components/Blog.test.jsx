@@ -10,7 +10,7 @@ describe('<Blog />', () => {
       url: 'url1',
       likes: 1000,
       user: {
-        id: "68daaa2957f66f81e6e3df79",
+        id: '68daaa2957f66f81e6e3df79',
         name: 'name',
         username: 'username'
       }
@@ -42,26 +42,26 @@ describe('<Blog />', () => {
     expect(noLikes).toBeVisible()
   })
 })
-  
+
 test('clicking the like button twice calls event handler twice', async () => {
   const blog = {
-      title: 'title1',
-      author: 'author1',
-      url: 'url1',
-      likes: 1000,
-      user: {
-        id: "68daaa2957f66f81e6e3df79",
-        name: 'name',
-        username: 'username'
-      }
+    title: 'title1',
+    author: 'author1',
+    url: 'url1',
+    likes: 1000,
+    user: {
+      id: '68daaa2957f66f81e6e3df79',
+      name: 'name',
+      username: 'username'
     }
-    const user = {
-      name : 'name',
-      username: 'username',
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMSIsImlkIjoiNjhkYWFhMjk1N2Y2NmY4MWU2ZTNkZjc5IiwiaWF0IjoxNzU5NTIyOTYzfQ.fbnf80xJCCBJdS3N8JDtNE-9bqtl0QofGW-IUG8-1xU'
-    }
+  }
+  const user = {
+    name : 'name',
+    username: 'username',
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMSIsImlkIjoiNjhkYWFhMjk1N2Y2NmY4MWU2ZTNkZjc5IiwiaWF0IjoxNzU5NTIyOTYzfQ.fbnf80xJCCBJdS3N8JDtNE-9bqtl0QofGW-IUG8-1xU'
+  }
   console.log(blog)
-  
+
   const mockHandler = vi.fn()
 
   render(

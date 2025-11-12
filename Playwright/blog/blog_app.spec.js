@@ -1,6 +1,5 @@
 const { test, describe, expect, beforeEach } = require('@playwright/test')
 const { loginWith, createBlog } = require('./helper')
-const { log } = require('console')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -86,19 +85,19 @@ describe('Blog app', () => {
       await page.getByText('you liked a blog title1 by author1').waitFor()
       await page.getByRole('button', { name: 'like' }).click()
       await page.getByRole('button', { name: 'hide' }).click()
-      
+
       expect(page.getByText('view').first().locator('..').getByText('title1 author1 view')).toBeVisible()
     })
   })
   test('only can see remove button if blog is yours', async ({ page, request }) => {
     await request.post('/api/users', {
-    data: {
-      username: 'test',
-      name: 'test',
-      password: '111',
-      blogs:[]
-    }
-  })
+      data: {
+        username: 'test',
+        name: 'test',
+        password: '111',
+        blogs:[]
+      }
+    })
 
     await loginWith(page, 'mluukkai', 'salainen')
     await page.getByText('mluukkai logged in').waitFor()
@@ -110,7 +109,7 @@ describe('Blog app', () => {
 
     await page.getByRole('button', { name: 'log out' }).click()
     await page.getByText('log in to application').waitFor()
-    
+
     await loginWith(page, 'test', '111')
     await page.getByText('test logged in').waitFor()
 

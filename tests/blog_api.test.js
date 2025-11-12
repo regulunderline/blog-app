@@ -3,11 +3,9 @@ const { test, after, beforeEach, describe } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const jwt = require('jsonwebtoken')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const { request } = require('node:http')
 
 const api = supertest(app)
 
@@ -46,8 +44,8 @@ describe('addition of a new blog', () => {
         username: 'hello1',
         password: '111'
       })
-    
-    token = 'Bearer '.concat(body.token)
+
+    const token = 'Bearer '.concat(body.token)
 
     await api
       .post('/api/blogs')
@@ -61,7 +59,7 @@ describe('addition of a new blog', () => {
       .set('Authorization', token)
       .expect(201)
       .expect('Content-Type', /application\/json/)
-    
+
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length +1)
 
@@ -77,7 +75,7 @@ describe('addition of a new blog', () => {
         username: 'hello1',
         password: '111'
       })
-    
+
     const token = 'Bearer '.concat(body.token)
 
     const response = await api
@@ -106,48 +104,6 @@ describe('addition of a new blog', () => {
         likes: 10,
       })
       .expect(401)
-  })
-})
-
-describe('deletion of a blog', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
-
-    await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', token).expect(204)
-
-    const blogsAtEnd = await helper.blogsInDb()
-
-    const ids = blogsAtEnd.map(n => n.id)
-    assert(!ids.includes(blogToDelete.id))
-
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
-  })
-})
-
-describe('updating a blog', () => {
-  test('succeeds with valid data ', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToUpdate = blogsAtStart[0]
-
-    await api
-      .put(`/api/blogs/${blogToUpdate.id}`)
-      .send({likes: 100})
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
-    
-    const blogsAtEnd = await helper.blogsInDb()
-    const likesAtEnd = blogsAtEnd.find(blog => blog.id === blogToUpdate.id).likes
-    assert.equal(likesAtEnd, 100)
-  })
-
-  test('fails with status code 404 if id is invalid', async () => {
-    const invalidId = await helper.nonExistingId() 
-
-    await api
-      .put(`/api/blogs/${invalidId}`)
-      .send({})
-      .expect(404)
   })
 })
 

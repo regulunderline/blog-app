@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Expand from './Expand'
-import blogService from '../services/blogs'
 
 const Blog = ({ blog, user, handleLike, handleRemove }) => {
 

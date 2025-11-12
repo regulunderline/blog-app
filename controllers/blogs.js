@@ -1,11 +1,8 @@
 const blogsRouter = require('express').Router()
-const { request, response } = require('../app')
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user',{ username : 1, name : 1, id : 1})
+  const blogs = await Blog.find({}).populate('user',{ username : 1, name : 1, id : 1 })
   response.json(blogs)
 })
 
@@ -40,7 +37,15 @@ blogsRouter.delete('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
   const user = request.user
 
-  if ( !(blog.user.toString() === user.id.toString()) ) {
+  if (!user) {
+    return response.status(401).json({ error: 'log in first' })
+  }
+
+  if (!blog) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+
+  if ( !(blog.user.toString() === user._id.toString()) ) {
     return response.status(403).json({ error: 'blog is not yours' })
   }
 

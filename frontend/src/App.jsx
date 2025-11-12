@@ -97,12 +97,12 @@ const App = () => {
       setMessage([`you liked a blog ${likedBlog.title} by ${likedBlog.author}`, true])
       setTimeout(() => {
         setMessage([null, false])
-     }, 5000)
+      }, 5000)
     } catch (error){
-      setMessage([`could not like`, false])
+      setMessage(['could not like', false])
       setTimeout(() => {
         setMessage([null, false])
-     }, 5000)
+      }, 5000)
       console.log(error)
     }
   }
@@ -118,7 +118,7 @@ const App = () => {
           setMessage([null, false])
         }, 5000)
       } else {
-        setMessage([`could not remove`, false])
+        setMessage(['could not remove', false])
         setTimeout(() => {
           setMessage([null, false])
         }, 5000)
@@ -182,7 +182,7 @@ const App = () => {
           <BlogForm handleCreate={handleCreate} />
         </Togglable>
         {console.log(blogs)}
-        {blogs.toSorted((a,b) => b.likes - a.likes).map(blog => 
+        {blogs.toSorted((a,b) => b.likes - a.likes).map(blog =>
           <Blog key={blog.id} blog={blog} user={user} handleLike={() => addedLike(blog)} handleRemove={() => removedBlog(blog)} />)}
       </div>
     )
